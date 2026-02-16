@@ -1,0 +1,1170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adventure — Punta Cana Travel Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --cream:#E5DECA;
+  --ocean:#7E9DA2;
+  --avocado:#898433;
+  --olive:#45441A;
+  --darkgreen:#282C15;
+
+  --text:#1f2a22;
+  --muted:rgba(31,42,34,.62);
+  --stroke:rgba(31,42,34,.12);
+
+  --radius-xl:32px;
+  --radius-lg:24px;
+  --radius-md:18px;
+  --shadow:0 18px 40px rgba(31,42,34,.12);
+}
+
+*{ box-sizing:border-box; }
+html, body { height:100%; }
+html, body { overflow-x:hidden; }
+
+body{
+  margin:0;
+  font-family:Inter, system-ui, sans-serif;
+  color:var(--text);
+  background:var(--cream);
+  padding:clamp(12px, 2.4vw, 28px);
+  position:relative;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:
+    radial-gradient(1200px 700px at 20% 15%, rgba(126,157,162,.40), transparent 60%),
+    radial-gradient(1000px 600px at 85% 10%, rgba(137,132,51,.25), transparent 62%),
+    linear-gradient(180deg, rgba(126,157,162,.55) 0%, rgba(217,230,227,.75) 38%, rgba(229,222,202,1) 100%);
+  background-repeat:no-repeat;
+}
+
+.shell{
+  width:100%;
+  max-width:1240px;
+  margin:0 auto;
+  background:rgba(255,255,255,.25);
+  border-radius:var(--radius-xl);
+  padding:18px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(12px);
+  overflow:hidden;
+}
+
+.app{
+  display:grid;
+  grid-template-columns:240px 1fr;
+  gap:16px;
+  min-width:0;
+}
+
+/* Sidebar */
+.sidebar{
+  background:rgba(255,255,255,.55);
+  border-radius:var(--radius-lg);
+  padding:18px;
+  min-width:0;
+}
+
+.brand{
+  font-weight:900;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-bottom:18px;
+}
+
+.brand-badge{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--avocado),var(--ocean));
+}
+
+.nav a{
+  display:flex;
+  gap:10px;
+  padding:12px;
+  margin-bottom:6px;
+  border-radius:14px;
+  text-decoration:none;
+  color:var(--text);
+  font-weight:800;
+}
+
+.nav a.active{
+  background:linear-gradient(135deg,var(--olive),var(--darkgreen));
+  color:var(--cream);
+}
+
+/* Main */
+.main{
+  background:rgba(255,255,255,.55);
+  border-radius:var(--radius-lg);
+  padding:18px;
+  min-width:0;
+  position:relative;
+}
+
+/* Header */
+.header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:12px;
+  padding:4px 2px 0;
+}
+.header .titles h1{
+  margin:0;
+  font-size:30px;
+  font-weight:900;
+  letter-spacing:-.5px;
+}
+.header .titles p{
+  margin:4px 0 0;
+  font-weight:800;
+  color:var(--muted);
+}
+.userchip{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:16px;
+  background:rgba(255,255,255,.45);
+  border:1px solid rgba(31,42,34,.10);
+  box-shadow:0 10px 22px rgba(31,42,34,.06);
+}
+.avatar{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--avocado),var(--ocean));
+}
+.username{ font-weight:900; }
+.chev{ font-weight:900; color:rgba(31,42,34,.55); }
+
+/* Filters */
+.filters{
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap:12px;
+  background:rgba(255,255,255,.65);
+  padding:12px;
+  border-radius:var(--radius-md);
+  min-width:0;
+  margin-top:6px;
+}
+.field{ min-width:0; }
+
+label{
+  display:block;
+  font-size:12px;
+  font-weight:900;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+select, input[type="number"]{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(229,222,202,.35);
+  font-weight:800;
+  min-width:0;
+}
+
+/* Budget */
+.budget{
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:10px;
+  padding-top:2px;
+  margin-top:-4px;
+}
+
+.budget-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.budget-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.budget-min{
+  font-weight:900;
+  color:rgba(31,42,34,.70);
+}
+
+.budget-pill{
+  font-weight:900;
+  color:var(--olive);
+  background:rgba(229,222,202,.40);
+  border:1px solid rgba(31,42,34,.12);
+  border-radius:999px;
+  padding:8px 12px;
+  white-space:nowrap;
+}
+
+.budget-slider{
+  width:100%;
+  accent-color:var(--avocado);
+}
+
+/* KPI */
+.kpis{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin:16px 0;
+  min-width:0;
+}
+
+.kpi{
+  padding:16px;
+  border-radius:18px;
+  color:var(--cream);
+  min-width:0;
+}
+
+.kpi .label{ font-size:15px; font-weight:900; }
+.kpi .value{ font-size:36px; font-weight:900; margin-top:6px; }
+
+.kpi.flight{ background:linear-gradient(135deg,var(--ocean),#9fb8bb); }
+.kpi.daily { background:linear-gradient(135deg,#8fb2b6,var(--ocean)); }
+.kpi.month { background:linear-gradient(135deg,var(--avocado),#b2ad58); }
+.kpi.crowd { background:linear-gradient(135deg,var(--olive),var(--darkgreen)); }
+
+/* ✅ Summary: remove “daily spend” (was duplicated) + color-code the remaining cards */
+.summary{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin:10px 0 14px;
+}
+
+.sum-card{
+  border-radius:18px;
+  padding:12px;
+  min-width:0;
+  border:1px solid rgba(31,42,34,.10);
+}
+
+.sum-card .t{ font-weight:900; font-size:12px; color:rgba(229,222,202,.92); }
+.sum-card .v{ font-weight:900; font-size:24px; margin-top:6px; color:var(--cream); }
+
+/* color styles (using your palette) */
+.sum-trip{
+  background:linear-gradient(135deg,var(--avocado), #b2ad58);
+}
+.sum-remain{
+  background:linear-gradient(135deg,var(--olive), var(--darkgreen));
+}
+
+/* small helper line inside summary cards */
+.sum-sub{
+  margin-top:4px;
+  font-weight:800;
+  font-size:12px;
+  color:rgba(229,222,202,.85);
+}
+
+/* Hotel rail */
+.hotel-rail{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  padding-bottom:10px;
+  scroll-behavior:smooth;
+  scroll-snap-type:x mandatory;
+  max-width:100%;
+}
+.hotel-rail::-webkit-scrollbar{ height:10px; }
+.hotel-rail::-webkit-scrollbar-thumb{
+  background:rgba(31,42,34,.22);
+  border-radius:999px;
+}
+
+.hotel{
+  flex:0 0 240px;
+  background:rgba(255,255,255,.75);
+  border-radius:16px;
+  overflow:hidden;
+  scroll-snap-align:start;
+  border:1px solid rgba(31,42,34,.10);
+}
+.hotel img{ width:100%; height:120px; object-fit:cover; display:block; }
+.hotel .info{ padding:10px; }
+.hotel .name{ font-weight:900; line-height:1.2; }
+.hotel .city{ font-weight:800; color:var(--muted); font-size:12px; margin-top:2px; }
+.hotel .stars{ margin-top:8px; color:var(--avocado); font-weight:900; letter-spacing:1px; font-size:14px; }
+.hotel .price{ margin-top:6px; font-weight:900; color:var(--olive); }
+
+/* Tableau */
+.grid, .grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:16px;
+  min-width:0;
+}
+
+.card{
+  background:rgba(255,255,255,.65);
+  border-radius:18px;
+  padding:12px;
+  min-width:0;
+}
+
+.card h3{
+  margin:0 0 8px;
+  font-size:14px;
+  font-weight:900;
+  color:var(--olive);
+}
+
+.placeholder{
+  height:180px;
+  border:2px dashed rgba(31,42,34,.25);
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  color:var(--muted);
+  background:rgba(229,222,202,.35);
+}
+
+/* Back to top */
+.back-to-top{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:50;
+  padding:10px 12px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:900;
+  color:var(--cream);
+  background:linear-gradient(135deg,var(--olive),var(--darkgreen));
+  box-shadow:0 14px 26px rgba(31,42,34,.18);
+  display:none;
+}
+
+/* Responsive */
+@media (max-width: 980px){
+  .app{ grid-template-columns:1fr; }
+  .kpis{ grid-template-columns:repeat(2,1fr); }
+  .grid, .grid-2{ grid-template-columns:1fr; }
+  .filters{ grid-template-columns:1fr; }
+  .summary{ grid-template-columns:1fr; }
+  .header{ flex-direction:column; align-items:stretch; }
+}
+
+
+/* ===== Cheapest Months Card ===== */
+
+.cheapest-months{
+  background:#fff;
+  border-radius:18px;
+  border:1px solid #e8edf3;
+  box-shadow:0 10px 30px rgba(15,23,42,.08);
+}
+
+.cheapest-months .header{
+  font-size:22px;
+  font-weight:700;
+  padding:18px;
+}
+
+.cheapest-months .list{
+  padding:6px 12px 16px;
+}
+
+.cheapest-months .row{
+  display:grid;
+  grid-template-columns:44px 1fr auto 20px;
+  align-items:center;
+  gap:10px;
+  padding:12px 10px;
+  border-radius:14px;
+  cursor:default;
+}
+
+.cheapest-months .row + .row{
+  margin-top:6px;
+}
+
+.cheapest-months .rank{
+  text-align:center;
+  font-weight:700;
+  color:#64748b;
+}
+
+.cheapest-months .month{
+  font-weight:700;
+  font-size:18px;
+}
+
+.cheapest-months .price{
+  font-weight:800;
+  font-size:18px;
+}
+
+.cheapest-months .row.is-top{
+  background:rgba(21,184,166,.15);
+  border:1px solid rgba(21,184,166,.3);
+}
+
+.cheapest-months .badge{
+  margin-left:8px;
+  font-size:13px;
+  font-weight:700;
+  color:#166534;
+  background:rgba(34,197,94,.15);
+  padding:4px 10px;
+  border-radius:999px;
+}
+
+/* Tooltip */
+#cheapestTooltip{
+  position:fixed;
+  opacity:0;
+  pointer-events:none;
+  background:#0b1220;
+  color:white;
+  padding:12px;
+  border-radius:12px;
+  max-width:360px;
+  font-size:14px;
+  z-index:9999;
+  transition:opacity .12s ease;
+}
+
+.map-container {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  height: 500px;
+  margin: auto;
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg");
+  background-size: cover;
+  background-position: center;
+  border-radius: 24px;
+}
+
+.map-container { position: relative; }
+
+.marker{
+  position:absolute;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.bubble{
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+  white-space: nowrap;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.20);
+  position: relative;
+  z-index: 3; /* keep it above the dot */
+}
+
+/* color tags */
+.low{ background:#22c55e; }
+.mid{ background:#facc15; color:#222; }
+.high{ background:#f97316; }
+
+.marker::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform: translate(-50%, 22px); /* pushes dot below the bubble */
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background:#111;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.9);
+  z-index: 1;
+}
+
+.edge-right .bubble {
+  transform: translateX(-60%);
+}
+
+.edge-left .bubble {
+  transform: translateX(10%);
+}
+
+.edge-top .bubble {
+  transform: translateY(20%);
+}
+
+.edge-bottom .bubble {
+  transform: translateY(-20%);
+}
+
+.weather-wrap{
+  height: 340px;      /* try 300–360 */
+  width: 100%;
+}
+
+/* ===== Heatmap (Cost & Comfort) ===== */
+.heatmap-wrap{
+  width:100%;
+  overflow:hidden;
+}
+
+.heatmap{
+  display:grid;
+  grid-template-columns: 120px repeat(4, 1fr);
+  gap:10px;
+}
+
+.heatmap .cell{
+  padding:12px 10px;
+  border-radius:14px;
+  text-align:center;
+  font-weight:900;
+  font-size:14px;
+  position:relative;
+  border:1px solid rgba(31,42,34,.10);
+  user-select:none;
+}
+
+.heatmap .head{
+  background: rgba(126,157,162,.18); /* ocean tint */
+  color: var(--olive);
+  border:1px solid rgba(126,157,162,.35);
+}
+
+.heatmap .month{
+  background: rgba(229,222,202,.55); /* cream tint */
+  color: var(--darkgreen);
+  text-align:left;
+  padding-left:14px;
+}
+
+.heatmap .good{
+  background: rgba(126,157,162,.92); /* ocean */
+  color:#fff;
+  border-color: rgba(126,157,162,.65);
+}
+
+.heatmap .okay{
+  background: rgba(137,132,51,.88); /* avocado */
+  color:#fff;
+  border-color: rgba(137,132,51,.60);
+}
+
+.heatmap .bad{
+  background: rgba(69,68,26,.92); /* olive */
+  color:#fff;
+  border-color: rgba(69,68,26,.65);
+}
+
+/* tooltip */
+.heatmap .cell[data-tip]:hover::after{
+  content: attr(data-tip);
+  position:absolute;
+  bottom:120%;
+  left:50%;
+  transform:translateX(-50%);
+  background:#0b1220;
+  color:#fff;
+  padding:8px 10px;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:800;
+  white-space:nowrap;
+  box-shadow:0 10px 22px rgba(0,0,0,.22);
+  z-index:10;
+}
+
+.heat-legend{
+  display:flex;
+  gap:10px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+
+.heat-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 10px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:12px;
+  border:1px solid rgba(31,42,34,.12);
+  background: rgba(255,255,255,.40);
+  color: var(--olive);
+}
+
+.heat-dot{ width:10px; height:10px; border-radius:999px; }
+.heat-dot.good{ background: var(--ocean); }
+.heat-dot.okay{ background: var(--avocado); }
+.heat-dot.bad{ background: var(--olive); }
+
+@media (max-width: 980px){
+  .heatmap{ grid-template-columns: 140px repeat(4, 1fr); }
+  .heatmap .cell{ font-size:13px; padding:10px 8px; }
+}
+
+
+</style>
+</head>
+
+<body>
+<div class="shell">
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge"></div>
+        Advanza
+      </div>
+      <nav class="nav">
+        <a class="active" href="#">Dashboard</a>
+        <a href="#">Places</a>
+        <a href="#">Flights</a>
+        <a href="#">Profile</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- HEADER -->
+      <header class="header">
+        <div class="titles">
+          <h1>Adventure</h1>
+          <p>Travel Cost Comparison</p>
+        </div>
+
+        <div class="userchip" aria-label="Account">
+          <div class="avatar" aria-hidden="true"></div>
+          <div class="username">Reed Noman</div>
+          <div class="chev">▾</div>
+        </div>
+      </header>
+
+      <!-- FILTERS -->
+      <section class="filters">
+
+        <div class="field">
+          <label>Destination</label>
+          <select id="destination" disabled>
+            <option value="punta" selected>Punta Cana</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Month</label>
+          <select id="month">
+            <option value="apr" selected>April</option>
+            <option value="may">May</option>
+            <option value="jun">June</option>
+            <option value="sep">September</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Nights</label>
+          <input id="nights" type="number" min="1" max="21" step="1" value="5" />
+        </div>
+
+        <div class="budget">
+          <div class="budget-top">
+            <div class="budget-left">
+              <strong>Budget</strong>
+              <span class="budget-min" id="budgetMinText">$1,000 min</span>
+            </div>
+            <span class="budget-pill" id="budgetCurrent">$1,800</span>
+          </div>
+
+          <input class="budget-slider" type="range" id="budget" min="1000" max="2500" value="1800" step="50">
+        </div>
+
+      </section>
+
+      <!-- KPI BAR -->
+      <section class="kpis">
+        <div class="kpi flight"><div class="label">Avg Flight</div><div class="value" id="flight">$480</div></div>
+        <div class="kpi daily"><div class="label">Avg Daily</div><div class="value" id="daily">$170</div></div>
+        <div class="kpi month"><div class="label">Best Month</div><div class="value" id="best">Apr</div></div>
+        <div class="kpi crowd"><div class="label">Crowd Level</div><div class="value" id="crowd">Moderate</div></div>
+      </section>
+
+      <!-- ✅ SUMMARY (daily spend removed, only 2 cards) -->
+      <section class="summary">
+        <div class="sum-card sum-trip">
+          <div class="t">Estimated trip total</div>
+          <div class="v" id="sumTrip">$850</div>
+          <div class="sum-sub"><span id="sumMath">$170/day × 5 nights</span></div>
+        </div>
+
+        <div class="sum-card sum-remain">
+          <div class="t">Budget remaining</div>
+          <div class="v" id="sumRemain">$950</div>
+          <div class="sum-sub">After daily costs (flight not included)</div>
+        </div>
+      </section>
+
+      <!-- HOTELS -->
+      <section class="hotel-rail">
+        <div class="hotel">
+          <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/1d/f7/07/aerial-view-from-infinity.jpg?w=1400&h=800&s=1" alt="Hotel">
+          <div class="info">
+            <div class="name">Dreams Macao Beach Punta Cana</div>
+            <div class="city">Punta Cana</div>
+            <div class="stars" aria-label="5 stars">★★★★★</div>
+            <div class="price">$1,020/night</div>
+          </div>
+        </div>
+
+        <div class="hotel">
+          <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/9f/b6/ac/bahia-principe-luxury.jpg?w=1400&h=800&s=1" alt="Hotel">
+          <div class="info">
+            <div class="name">Bahia Principe Luxury Ambar</div>
+            <div class="city">Punta Cana</div>
+            <div class="stars" aria-label="5 stars">★★★★★</div>
+            <div class="price">$785/night</div>
+          </div>
+        </div>
+
+        <div class="hotel">
+          <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2e/9b/54/54/caption.jpg?w=1400&h=800&s=1" alt="Hotel">
+          <div class="info">
+            <div class="name">Dreams Flora Resort & Spa</div>
+            <div class="city">Punta Cana</div>
+            <div class="stars" aria-label="5 stars">★★★★★</div>
+            <div class="price">$870/night</div>
+          </div>
+        </div>
+
+        <div class="hotel">
+          <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/14/7e/c3/00/aerial-view.jpg?w=1000&h=600&s=1" alt="Hotel">
+          <div class="info">
+            <div class="name">Hotel Riu Palace Macao</div>
+            <div class="city">Punta Cana</div>
+            <div class="stars" aria-label="4 stars">★★★★☆</div>
+            <div class="price">$693/night</div>
+          </div>
+        </div>
+
+        <div class="hotel">
+          <img src="https://lh3.googleusercontent.com/p/AF1QipOfJ-BgYM1Z42V2Fu4AljKyklvn8cxoaWsKxk-b=s1360-w1360-h1020-rw" alt="Hotel">
+          <div class="info">
+            <div class="name">Majestic Elegance Punta Cana</div>
+            <div class="city">Punta Cana</div>
+            <div class="stars" aria-label="4 stars">★★★★☆</div>
+            <div class="price">$485/night</div>
+          </div>
+        </div>
+
+        <div class="hotel">
+          <img src="https://www.royalbeachpuntacana.com/images/slides/slide-38.jpg" alt="Hotel">
+          <div class="info">
+            <div class="name">Dreams Royal Beach Punta Cana</div>
+            <div class="city">Punta Cana</div>
+            <div class="stars" aria-label="4 stars">★★★★☆</div>
+            <div class="price">$657/night</div>
+          </div>
+        </div>
+      </section>
+
+
+      <section class="grid">
+        <div class="card">
+          <h3>Top 5 Cheapest Months</h3>
+            <div class="card cheapest-months">
+  <div class="header">Top 5 Cheapest Months</div>
+  <div class="list" id="cheapestMonthsList"></div>
+
+
+<!-- Tooltip -->
+<div class="tooltip" id="cheapestTooltip"></div>
+        </div>
+  </div>
+        <div class="card">
+          <h3>Cost of Travel Globally</h3>
+          <div class="map-container">
+
+<div class="marker edge-left" style="top: 36%; left: 3%;">
+  <div class="bubble mid">$500 USA</div>
+</div>
+
+<div class="marker" style="top: 30%; left: 44%;">
+  <div class="bubble mid">$680 Spain</div>
+</div>
+
+<div class="marker" style="top: 40%; left: 59%;">
+  <div class="bubble high">$578 Egypt</div>
+</div>
+
+<div class="marker" style="top: 42%; left: 25%;">
+  <div class="bubble low">$480 Punta Cana</div>
+</div>
+
+<div class="marker edge-right" style="top: 46%; left: 90%;">
+  <div class="bubble mid">$880 Thailand</div>
+</div>
+
+</div>
+        </div>
+      </section>
+
+      <section class="grid-2">
+        <div class="card">
+          <h3>Monthly Weather & Comfort</h3>
+          <div class="weather-wrap">
+  <canvas id="weatherChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="card">
+  <h3>Cost & Comfort Comparison</h3>
+
+  <div class="heatmap-wrap">
+    <div class="heatmap" id="comfortHeatmap">
+      <div class="cell head"></div>
+      <div class="cell head">Cost</div>
+      <div class="cell head">Temp</div>
+      <div class="cell head">Rain</div>
+      <div class="cell head">Overall</div>
+    </div>
+
+    <div class="heat-legend">
+      <span class="heat-chip"><span class="heat-dot good"></span>Good</span>
+      <span class="heat-chip"><span class="heat-dot okay"></span>Okay</span>
+      <span class="heat-chip"><span class="heat-dot bad"></span>Not Ideal</span>
+    </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<button class="back-to-top" id="backToTop" type="button" aria-label="Back to top">↑ Top</button>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<script>
+  const money = (n) => "$" + n.toLocaleString();
+
+  const budget = document.getElementById("budget");
+  const month = document.getElementById("month");
+  const nights = document.getElementById("nights");
+
+  const flight = document.getElementById("flight");
+  const daily = document.getElementById("daily");
+  const best = document.getElementById("best");
+  const crowd = document.getElementById("crowd");
+
+  const budgetCurrent = document.getElementById("budgetCurrent");
+  const budgetMinText = document.getElementById("budgetMinText");
+
+  // Summary
+  const sumTrip = document.getElementById("sumTrip");
+  const sumRemain = document.getElementById("sumRemain");
+  const sumMath = document.getElementById("sumMath");
+
+  const MIN_BUDGET = Number(budget.min);
+  const MAX_BUDGET = Number(budget.max);
+  budgetMinText.textContent = `${money(MIN_BUDGET)} min`;
+
+  // Punta Cana baseline
+  const puntaBase = { flight: 420, daily: 165 };
+
+  const monthFactor = {
+    apr: { multF: 1.00, multD: 1.00, best: "Apr", crowd: "Moderate" },
+    may: { multF: 1.05, multD: 1.03, best: "May", crowd: "Moderate" },
+    jun: { multF: 1.12, multD: 1.08, best: "Jun", crowd: "High" },
+    sep: { multF: 0.95, multD: 0.96, best: "Sep", crowd: "Low" }
+  };
+
+  function clampInt(value, min, max){
+    const n = Math.round(Number(value));
+    if (Number.isNaN(n)) return min;
+    return Math.max(min, Math.min(max, n));
+  }
+
+  function update(){
+    const b = Number(budget.value);
+    budgetCurrent.textContent = money(b);
+
+    const nNights = clampInt(nights.value, 1, 21);
+    nights.value = nNights;
+
+    const mf = monthFactor[month.value] || monthFactor.apr;
+
+    // budget scale: 1000 -> 0.85, 2500 -> 1.25
+    const budgetScale = 0.85 + ((b - MIN_BUDGET) / (MAX_BUDGET - MIN_BUDGET)) * 0.40;
+
+    const flightVal = Math.round(puntaBase.flight * budgetScale * mf.multF);
+    const dailyVal  = Math.round(puntaBase.daily  * budgetScale * mf.multD);
+
+    flight.textContent = money(flightVal);
+    daily.textContent  = money(dailyVal);
+
+    best.textContent = mf.best;
+    crowd.textContent = mf.crowd;
+
+    // Summary (daily was duplicated before — now only here via math line)
+    const tripTotal = dailyVal * nNights;
+    const remain = b - tripTotal;
+
+    sumTrip.textContent = money(tripTotal);
+    sumRemain.textContent = money(remain);
+    sumMath.textContent = `${money(dailyVal)}/day × ${nNights} night${nNights === 1 ? "" : "s"}`;
+  }
+
+  budget.addEventListener("input", update);
+  month.addEventListener("change", update);
+  nights.addEventListener("input", update);
+  update();
+
+  // Back to top
+  const backToTop = document.getElementById("backToTop");
+  window.addEventListener("scroll", () => {
+    backToTop.style.display = window.scrollY > 300 ? "block" : "none";
+  });
+  backToTop.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+
+
+// ===== Cheapest Months Logic =====
+const cheapestMonthsData = [
+  {
+    month: "April",
+    price: 504,
+    hover: "April is the best time of year to visit Punta Cana. Prices are low, it is overall very hot, and there is not a lot of rain."
+  },
+  {
+    month: "May",
+    price: 480,
+    hover: "May is a great option for traveling. The temperature is very warm but there is a higher chance of rain."
+  },
+  {
+    month: "September",
+    price: 530,
+    hover: "In September you can expect fewer kids around. The temperature is very nice and there are lower chances of rain during the daytime."
+  },
+  {
+    month: "June",
+    price: 574,
+    hover: "June is often calm and travelers often like how hot the temperature is and how low the precipitation chance is."
+  },
+  {
+    month: "October",
+    price: 596,
+    hover: "There is often lots of rain in October and it marks the start of hurricane season, but prices are lower than peak times."
+  }
+];
+
+// sort + top 5
+const topFiveMonths = cheapestMonthsData
+  .sort((a,b) => a.price - b.price)
+  .slice(0,5);
+
+const listEl = document.getElementById("cheapestMonthsList");
+const tooltip = document.getElementById("cheapestTooltip");
+
+listEl.innerHTML = topFiveMonths.map((d, i) => `
+  <div class="row ${i === 0 ? "is-top" : ""}"
+       data-month="${d.month}"
+       data-price="${d.price}"
+       data-hover="${d.hover}">
+    <div class="rank">${i + 1}</div>
+    <div>
+      <span class="month">${d.month}</span>
+      ${i === 0 ? `<span class="badge">Lowest</span>` : ``}
+    </div>
+    <div class="price">$${d.price}</div>
+    <div>›</div>
+  </div>
+`).join("");
+
+// Tooltip events
+listEl.addEventListener("mousemove", (e) => {
+  const row = e.target.closest(".row");
+  if (!row) return;
+
+  tooltip.style.opacity = "1";
+  tooltip.innerHTML = `
+    <strong>${row.dataset.month}</strong><br>
+    $${row.dataset.price} / day<br><br>
+    ${row.dataset.hover}
+  `;
+  tooltip.style.left = (e.clientX + 12) + "px";
+  tooltip.style.top  = (e.clientY + 12) + "px";
+});
+
+listEl.addEventListener("mouseleave", () => {
+  tooltip.style.opacity = "0";
+});
+
+// ===== Weather Chart (Bars + Sun highs) =====
+(function initWeatherChart(){
+  const canvas = document.getElementById("weatherChart");
+  if (!canvas || typeof Chart === "undefined") return;
+
+  const labels = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
+
+  const precipitation2025 = [66, 54, 54, 69, 124, 103, 78, 103, 101, 152, 116, 78];
+  const tempHigh2026      = [28, 28, 29, 29, 30, 31, 31, 32, 32, 30, 29, 29];
+
+  const sunSvg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+      <g fill="none" stroke="#f4a300" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="32" cy="32" r="10" fill="#ffd36a" stroke="#f4a300"/>
+        <path d="M32 6v8M32 50v8M6 32h8M50 32h8"/>
+        <path d="M13 13l6 6M45 45l6 6M51 13l-6 6M19 45l-6 6"/>
+      </g>
+    </svg>
+  `;
+  const sunImg = new Image();
+  sunImg.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(sunSvg);
+
+  sunImg.onload = () => {
+    new Chart(canvas, {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          {
+            type: "bar",
+            label: "2025 Precipitation (mm)",
+            data: precipitation2025,
+            yAxisID: "yPrecip",
+            backgroundColor: "rgba(107, 174, 214, 0.9)",
+            borderWidth: 0,
+            order: 2
+          },
+          {
+            type: "line",
+            label: "2026 Avg Temp High (°C)",
+            data: tempHigh2026,
+            yAxisID: "yTemp",
+            borderColor: "#f4a300",
+            borderWidth: 3,
+            tension: 0.25,
+            pointStyle: sunImg,
+            pointRadius: 8,
+            pointHoverRadius: 10,
+            order: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (ctx) => {
+                const v = ctx.raw;
+                return ctx.dataset.yAxisID === "yPrecip"
+                  ? ` Precipitation: ${v} mm`
+                  : ` Temp high: ${v} °C`;
+              }
+            }
+          },
+          legend: { position: "top" }
+        },
+        scales: {
+          x: {
+            title: { display: true, text: "Months" },
+            ticks: { maxRotation: 90, minRotation: 90 }
+          },
+          yPrecip: {
+            position: "left",
+            min: 50,
+            max: 160,
+            title: { display: true, text: "2025 Precipitation by Month" }
+          },
+          yTemp: {
+            position: "right",
+            min: 25,
+            max: 35,
+            grid: { drawOnChartArea: false },
+            title: { display: true, text: "Average Temperature for 2026 by Month" }
+          }
+        }
+      }
+    });
+  };
+})();
+
+// ===== Heatmap (Cost & Comfort) =====
+(function initHeatmap(){
+  const heatEl = document.getElementById("comfortHeatmap");
+  if (!heatEl) return;
+
+  // Demo ratings for now (you can change these anytime)
+  const rows = [
+    { month:"April",     cost:"okay", temp:"good", rain:"okay", overall:"good",
+      tip:"Warm + moderate rain, strong value." },
+    { month:"May",       cost:"good", temp:"good", rain:"okay", overall:"good",
+      tip:"Lowest prices, warm temps." },
+    { month:"June",      cost:"bad",  temp:"good", rain:"bad",  overall:"okay",
+      tip:"Hot but wetter + busier." },
+    { month:"September", cost:"good", temp:"okay", rain:"bad",  overall:"okay",
+      tip:"Cheap but hurricane season risk." },
+    { month:"October",   cost:"okay", temp:"okay", rain:"bad",  overall:"okay",
+      tip:"Rainy but more affordable." }
+  ];
+
+  // Remove any old injected rows (keeps your header row)
+  const keep = 5; // header cells count
+  while (heatEl.children.length > keep) heatEl.removeChild(heatEl.lastChild);
+
+  rows.forEach(r => {
+    heatEl.insertAdjacentHTML("beforeend", `
+      <div class="cell month">${r.month}</div>
+      <div class="cell ${r.cost}" data-tip="${r.month} — Cost: ${r.cost.toUpperCase()}">${r.cost}</div>
+      <div class="cell ${r.temp}" data-tip="${r.month} — Temp comfort: ${r.temp.toUpperCase()}">${r.temp}</div>
+      <div class="cell ${r.rain}" data-tip="${r.month} — Rain comfort: ${r.rain.toUpperCase()}">${r.rain}</div>
+      <div class="cell ${r.overall}" data-tip="${r.month} — ${r.tip}">${r.overall}</div>
+    `);
+  });
+})();
+
+
+
+</script>
+
+</body>
+</html>
